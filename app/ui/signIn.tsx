@@ -26,15 +26,13 @@ export default function SignIn() {
 
     return (
         <div>
-            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-                <h1 className="mb-6 text-center text-2xl font-semibold text-gray-800">
-                    Sign In
-                </h1>
+            <div className="w-full max-w-md border-2 p-8">
+
                 <Form onSubmit={signIn} className="space-y-5">
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium text-gray-700"
+                            className="block font-medium"
                         >
                             Email
                         </label>
@@ -44,7 +42,7 @@ export default function SignIn() {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 w-full border px-3 py-2"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -52,7 +50,7 @@ export default function SignIn() {
                     <div>
                         <label
                             htmlFor="password"
-                            className="block text-sm font-medium text-gray-700"
+                            className="block font-medium"
                         >
                             Password
                         </label>
@@ -62,14 +60,14 @@ export default function SignIn() {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
-                            placeholder="••••••••"
+                            className="mt-1 w-full border px-3 py-2"
+                            placeholder="********"
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="w-full border px-4 py-2 font-bold hover:bg-white hover:text-black"
                     >
                         Sign In
                     </button>
