@@ -4,6 +4,8 @@ import { auth } from "~/lib/auth.server";
 import { useState } from "react";
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from "ai";
+import Terminal from "~/ui/terminal";
+
 
 export async function loader({ request }: LoaderFunctionArgs) {
     const session = await auth.api.getSession({ headers: request.headers })
@@ -20,23 +22,22 @@ export default function Protected({ loaderData }: Route.ComponentProps) {
         transport: new DefaultChatTransport({ api: '/ai' })
     });
 
-    return (
-        <div>
-            <div> Hello, {(loaderData.user.email)}</div>
-            <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-                {messages.map(message => (
-                    <div key={message.id} className="whitespace-pre-wrap">
-                        {message.role === 'user' ? 'User: ' : 'AI: '}
-                        {message.parts.map((part, i) => {
-                            switch (part.type) {
-                                case 'text':
-                                    return <div key={`${message.id}-${i}`}>{part.text}</div>;
-                            }
-                        })}
-                    </div>
-                ))}
+    const userName = loaderData.user.email.split("@")[0];
 
-                <form
+    return (
+        <div className="terminal min-h-screen flex flex-col">
+            <div className="flex justify-center text-2xl">
+                Welcome to ChatPCT, {(loaderData.user.name)}!
+            </div>
+            <div className="grid grid-cols-2 grid-rows-2 flex-1">
+                <Terminal color={"red"} aiName={"authLeft"} userName={userName} messages={messages} />
+                <Terminal color={"blue"} aiName={"authRight"} userName={userName} messages={messages} />
+                <Terminal color={"green"} aiName={"libLeft"} userName={userName} messages={messages} />
+                <Terminal color={"yellow"} aiName={"libRight"} userName={userName} messages={messages} />
+            </div>
+            <div className="flex items-center p-2 w-full gap-2">
+                <div>{">"}</div>
+                <form className="flex w-full"
                     onSubmit={e => {
                         e.preventDefault();
                         sendMessage({ text: input });
@@ -44,15 +45,13 @@ export default function Protected({ loaderData }: Route.ComponentProps) {
                     }}
                 >
                     <input
-                        className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
+                        className="border w-full overflow-y-auto"
                         value={input}
-                        placeholder="Say something..."
+                        placeholder="Ask me your burning political questions!"
                         onChange={e => setInput(e.currentTarget.value)}
                     />
                 </form>
             </div>
         </div >
-
-
     )
 }
