@@ -17,23 +17,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Protected({ loaderData }: Route.ComponentProps) {
+    const terminalName = loaderData.user.email.split("@")[0];
     const [input, setInput] = useState('');
     const { messages, sendMessage } = useChat({
         transport: new DefaultChatTransport({ api: '/ai' })
     });
 
-    const userName = loaderData.user.email.split("@")[0];
+
 
     return (
-        <div className="terminal min-h-screen flex flex-col">
+        <div className="terminal h-screen max-h-screen flex flex-col">
             <div className="flex justify-center text-2xl">
                 Welcome to ChatPCT, {(loaderData.user.name)}!
             </div>
-            <div className="grid grid-cols-2 grid-rows-2 flex-1">
-                <Terminal color={"red"} aiName={"authLeft"} userName={userName} messages={messages} />
-                <Terminal color={"blue"} aiName={"authRight"} userName={userName} messages={messages} />
-                <Terminal color={"green"} aiName={"libLeft"} userName={userName} messages={messages} />
-                <Terminal color={"yellow"} aiName={"libRight"} userName={userName} messages={messages} />
+            <div className="grid grid-cols-2 grid-rows-2 flex-1 min-h-0 h-screen">
+                <Terminal color={"red"} aiName={"authLeft"} userName={terminalName} messages={messages} />
+                <Terminal color={"blue"} aiName={"authRight"} userName={terminalName} messages={messages} />
+                <Terminal color={"green"} aiName={"libLeft"} userName={terminalName} messages={messages} />
+                <Terminal color={"yellow"} aiName={"libRight"} userName={terminalName} messages={messages} />
             </div>
             <div className="flex items-center p-2 w-full gap-2">
                 <div>{">"}</div>
@@ -45,7 +46,7 @@ export default function Protected({ loaderData }: Route.ComponentProps) {
                     }}
                 >
                     <input
-                        className="border w-full overflow-y-auto"
+                        className="border w-full"
                         value={input}
                         placeholder="Ask me your burning political questions!"
                         onChange={e => setInput(e.currentTarget.value)}
