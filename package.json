@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^1.0.20",
     "@ai-sdk/openai": "^2.0.42",
     "@ai-sdk/react": "^2.0.59",
     "@react-router/node": "^7.9.2",
