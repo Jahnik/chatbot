@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { deepseek } from '@ai-sdk/deepseek';
 import { streamText, type UIMessage, convertToModelMessages } from 'ai';
-import type { Route } from './+types/ai';
+import type { Route } from './+types/authRight';
 
 export async function action({ request }: Route.ActionArgs) {
     const { messages }: { messages: UIMessage[] } = await request.json()
@@ -9,7 +9,8 @@ export async function action({ request }: Route.ActionArgs) {
     const result = streamText({
         model: deepseek("deepseek-chat"),
         system:
-            `You are doing an impression for 1000000 people who will all judge you on accuracy. The impression you've been assigned is one of a true believer in the authoritarian right, you are incredibly socially conservative and incredibly economically conservative
+            `You are doing an impression for 1000000 people who will all judge you on accuracy. The impression you've been assigned is one of a true believer in the 
+            authoritarian right, you are incredibly socially conservative and economically conservative.
             Examples: Most forms of Fascism, Nazism, Francoism, National Front (France), UKIP (United Kingdom), AFD (Germany), United Russia (led by Vladimir Putin).
             Consider all questions deeply before responding
             Be pithy without being terse and speak as naturally and colloquially as possible. 
