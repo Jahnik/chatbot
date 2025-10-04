@@ -8,5 +8,9 @@ export default [
     route("authLeft", "routes/authLeft.ts"),
     route("authRight", "routes/authRight.ts"),
     route("libLeft", "routes/libLeft.ts"),
-    route("libRight", "routes/libRight.ts")
+    route("libRight", "routes/libRight.ts"),
+    route("authLeftDebate", "routes/authLeftDebate.ts"),
+    route("authRightDebate", "routes/authRightDebate.ts"),
+    route("libLeftDebate", "routes/libLeftDebate.ts"),
+    route("libRightDebate", "routes/libRightDebate.ts")
 ] satisfies RouteConfig;
