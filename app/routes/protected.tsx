@@ -19,17 +19,40 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Protected({ loaderData }: Route.ComponentProps) {
     const terminalName = loaderData.user.email.split("@")[0];
     const [input, setInput] = useState('');
+    const [debateMode, setDebateMode] = useState(false)
+
+    const chatTitle = (!debateMode) ? "ChatPCT" : "ChatPCT/debateMode"
+
+    function debateModeHandler() {
+        setDebateMode(!debateMode)
+    }
+
+    //Chat Mode Routes
     const authLeft = useChat({
-        transport: new DefaultChatTransport({ api: '/authLeft' })
+        transport: new DefaultChatTransport({ api: "/authLeft" })
     });
     const authRight = useChat({
-        transport: new DefaultChatTransport({ api: '/authRight' })
+        transport: new DefaultChatTransport({ api: "/authRight" })
     });
     const libLeft = useChat({
-        transport: new DefaultChatTransport({ api: '/libLeft' })
+        transport: new DefaultChatTransport({ api: "/libLeft" })
     });
     const libRight = useChat({
-        transport: new DefaultChatTransport({ api: '/libRight' })
+        transport: new DefaultChatTransport({ api: "/libRight" })
+    });
+
+    //Debate Mode Routes
+    const authLeftDebate = useChat({
+        transport: new DefaultChatTransport({ api: "/authLeftDebate" })
+    });
+    const authRightDebate = useChat({
+        transport: new DefaultChatTransport({ api: "/authRightDebate" })
+    });
+    const libLeftDebate = useChat({
+        transport: new DefaultChatTransport({ api: "/libLeftDebate" })
+    });
+    const libRightDebate = useChat({
+        transport: new DefaultChatTransport({ api: "/libRightDebate" })
     });
 
 
@@ -37,24 +60,43 @@ export default function Protected({ loaderData }: Route.ComponentProps) {
 
     return (
         <div className="terminal h-screen max-h-screen flex flex-col">
-            <div className="flex justify-center text-2xl">
-                Welcome to ChatPCT, {(loaderData.user.name)}!
+            <div className="relative flex items-center text-2xl">
+                <div className="mx-auto">Welcome to {chatTitle}, {(loaderData.user.name)}!</div>
+                <button
+                    className="absolute right-1"
+                    onClick={debateModeHandler}
+                >
+                    {debateMode ? <p>Chat Mode</p> : <p>Debate Mode</p>}
+                </button>
             </div>
             <div className="grid grid-cols-2 grid-rows-2 flex-1 min-h-0 h-screen">
-                <Terminal color={"red"} aiName={"authLeft"} userName={terminalName} messages={authLeft.messages} />
-                <Terminal color={"blue"} aiName={"authRight"} userName={terminalName} messages={authRight.messages} />
-                <Terminal color={"green"} aiName={"libLeft"} userName={terminalName} messages={libLeft.messages} />
-                <Terminal color={"yellow"} aiName={"libRight"} userName={terminalName} messages={libRight.messages} />
+                <Terminal color={"red"} aiName={"authLeft"} userName={terminalName} messages={
+                    (debateMode) ? authLeftDebate.messages : authLeft.messages} />
+                <Terminal color={"blue"} aiName={"authRight"} userName={terminalName} messages={
+                    (debateMode) ? authRightDebate.messages : authRight.messages} />
+                <Terminal color={"green"} aiName={"libLeft"} userName={terminalName} messages={
+                    (debateMode) ? libLeftDebate.messages : libLeft.messages} />
+                <Terminal color={"yellow"} aiName={"libRight"} userName={terminalName} messages={
+                    (debateMode) ? libRightDebate.messages : libRight.messages} />
             </div>
             <div className="flex items-center p-2 w-full gap-2">
                 <div>{">"}</div>
                 <form className="flex w-full"
                     onSubmit={e => {
                         e.preventDefault();
-                        authLeft.sendMessage({ text: input });
-                        authRight.sendMessage({ text: input });
-                        libLeft.sendMessage({ text: input });
-                        libRight.sendMessage({ text: input });
+                        if (input === "!toggleMode") {
+                            debateModeHandler()
+                        } else if (!debateMode) {
+                            authLeft.sendMessage({ text: input });
+                            authRight.sendMessage({ text: input });
+                            libLeft.sendMessage({ text: input });
+                            libRight.sendMessage({ text: input });
+                        } else {
+                            authLeftDebate.sendMessage({ text: input });
+                            authRightDebate.sendMessage({ text: input });
+                            libLeftDebate.sendMessage({ text: input });
+                            libRightDebate.sendMessage({ text: input });
+                        }
                         setInput('');
                     }}
                 >
